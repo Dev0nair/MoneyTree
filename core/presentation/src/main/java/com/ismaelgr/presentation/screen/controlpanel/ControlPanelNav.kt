@@ -6,7 +6,7 @@ import com.ismaelgr.presentation.currentNavController
 
 const val CONTROL_PANEL_ROUTE = "controlpanel"
 
-fun NavGraphBuilder.ControlPanelScreen() {
+fun NavGraphBuilder.useControlPanelScreen() {
     composable(route = CONTROL_PANEL_ROUTE) {
         val navController = currentNavController()
         ControlPanelScreen(

@@ -5,13 +5,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.ismaelgr.presentation.LocalNavController
-import com.ismaelgr.presentation.screen.controlpanel.ControlPanelScreen
+import com.ismaelgr.presentation.screen.controlpanel.useControlPanelScreen
 import com.ismaelgr.presentation.screen.datedetails.useDateDetailsScreen
-import com.ismaelgr.presentation.screen.daylist.DayListScreen
+import com.ismaelgr.presentation.screen.daylist.useDayListScreen
 import com.ismaelgr.presentation.screen.home.HOME_ROUTE
-import com.ismaelgr.presentation.screen.home.HomeScreen
-import com.ismaelgr.presentation.screen.profitstudy.ProfitStudioScreen
-import com.ismaelgr.presentation.screen.report.ReportScreen
+import com.ismaelgr.presentation.screen.home.useHomeScreen
+import com.ismaelgr.presentation.screen.profitstudy.useProfitStudioScreen
+import com.ismaelgr.presentation.screen.report.useReportScreen
 
 @Composable
 fun MainNavigation() {
@@ -19,12 +19,12 @@ fun MainNavigation() {
     
     CompositionLocalProvider(LocalNavController provides navController) {
         NavHost(navController = navController, startDestination = HOME_ROUTE) {
-            HomeScreen()
-            DayListScreen()
-            ProfitStudioScreen()
+            useHomeScreen()
+            useDayListScreen()
+            useProfitStudioScreen()
             useDateDetailsScreen()
-            ReportScreen()
-            ControlPanelScreen()
+            useReportScreen()
+            useControlPanelScreen()
         }
     }
     

@@ -6,7 +6,7 @@ import com.ismaelgr.presentation.currentNavController
 
 const val PROFIT_STUDIO_ROUTE = "profitstudio"
 
-fun NavGraphBuilder.ProfitStudioScreen() {
+fun NavGraphBuilder.useProfitStudioScreen() {
     composable(route = PROFIT_STUDIO_ROUTE) {
         val navController = currentNavController()
         

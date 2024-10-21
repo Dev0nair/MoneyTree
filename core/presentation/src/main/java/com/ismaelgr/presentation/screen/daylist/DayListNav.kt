@@ -6,7 +6,7 @@ import com.ismaelgr.presentation.currentNavController
 
 const val DAY_LIST_ROUTE = "daylist"
 
-fun NavGraphBuilder.DayListScreen() {
+fun NavGraphBuilder.useDayListScreen() {
     composable(route = DAY_LIST_ROUTE) {
         val navController = currentNavController()
         

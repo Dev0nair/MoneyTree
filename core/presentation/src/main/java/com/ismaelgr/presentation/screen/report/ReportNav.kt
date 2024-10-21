@@ -6,7 +6,7 @@ import com.ismaelgr.presentation.currentNavController
 
 const val REPORT_ROUTE = "report"
 
-fun NavGraphBuilder.ReportScreen() {
+fun NavGraphBuilder.useReportScreen() {
     composable(route = REPORT_ROUTE) {
         val navController = currentNavController()
         ReportScreen(
