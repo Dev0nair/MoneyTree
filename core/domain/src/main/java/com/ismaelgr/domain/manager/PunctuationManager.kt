@@ -11,14 +11,15 @@ import javax.inject.Inject
 
 class PunctuationManager @Inject constructor(private val iRepository: IRepository) {
     
-    // Refactor: useSaved is useless. Should take it out on a new function to recover the current saved DateData of Date
-    // Should return a list of 49 items
+    /**
+     * Refactor: useSaved is useless. Should take it out on a new function to recover the current saved DateData of Date
+     * Should return a list of 49 items
+     * */
     fun generatePnOfDate(date: String, useSaved: Boolean): List<DateData> {
         if (useSaved) {
             val currentDateData: List<DateData> = iRepository.getDateData(date)
             if (currentDateData.isNotEmpty()) return currentDateData
         }
-        
         val dateDataList: MutableList<DateData> = mutableListOf()
         val resultList = iRepository.getResults()
             .filter { result -> result.date.before(date) }
@@ -38,7 +39,15 @@ class PunctuationManager @Inject constructor(private val iRepository: IRepositor
                 }
             }
             val pn = median(appearances) - counter
-            dateDataList.add(DateData(date = date, numberData = NumberData(number = number, punctuation = pn.roundTo())))
+            dateDataList.add(
+                DateData(
+                    date = date,
+                    numberData = NumberData(
+                        number = number,
+                        punctuation = pn.roundTo()
+                    )
+                )
+            )
         }
         
         return dateDataList

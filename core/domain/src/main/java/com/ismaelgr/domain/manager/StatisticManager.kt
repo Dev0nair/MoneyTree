@@ -1,6 +1,5 @@
 package com.ismaelgr.domain.manager
 
-import android.util.Log
 import com.ismaelgr.domain.IRepository
 import com.ismaelgr.domain.before
 import com.ismaelgr.domain.model.NumberData
@@ -17,12 +16,13 @@ class StatisticManager @Inject constructor(private val iRepository: IRepository)
             .sortedWith(
                 compareBy(
                     { nd -> nd.punctuation.toInt() !in usualPNs.map { it.toInt() } }, // Con el !in, los que aparezcan serán false e irán al principio
-                    { it.punctuation }) // Además, serán ordenados por puntuación de menos a mayor
+                    { it.punctuation }, // Además, serán ordenados por puntuación de menos a mayor
+                )
             )
-        val numStatisticsToGenerate = 15 * 6 // NUmber of sets * numbers per set
+        val numStatisticsToGenerate = 15 * 6 // Number of sets * numbers per set
         
         return pds.flatMap { res ->
-            // this calc takes the correct ammount to get all the numbers needed for the sets -> numStatisticsToGenerate / pds.size + 1. Per PD, we get the nearest x pns with the nearest number associated
+            // this calc takes the correct amount to get all the numbers needed for the sets -> numStatisticsToGenerate / pds.size + 1. Per PD, we get the nearest x pns with the nearest number associated
             val numbers = chooseNearestNumber(listPNs = sortedPnList, pn = res.pn, (numStatisticsToGenerate / pds.size + 1))
             numbers.map { num ->
                 Statistic(pd = res.pd, pn = res.pn, number = num)
@@ -48,30 +48,23 @@ class StatisticManager @Inject constructor(private val iRepository: IRepository)
             }
         }
         
-        return result.map { res -> res.map { NumberData(it.number, it.pn) } }
+        return result.map { res ->
+            res.map { static -> NumberData(static.number, static.pn) }
+        }
     }
     
     fun newGenerateSet(
         statistic: List<Statistic>,
     ): List<Statistic> {
         if (statistic.isEmpty()) {
-            Log.i(this@StatisticManager.javaClass.simpleName, "Empty statistics!")
             return emptyList()
         }
-        //val numbers = mutableListOf<Statistic>()
         return statistic
-            //.sortedBy { it.pd }
             .distinctBy { it.number }
             .take(6)
-        //        (1..6).forEach { number ->
-        //            val filteredList: List<Statistic> = statistic.filter { n -> n.number !in numbers.map { it.number } }
-        //            val newNumber = filteredList.getOrElse(number) { Statistic(-1.0, -1.0, 0) }
-        //            numbers.add(newNumber)
-        //        }
-        //
-        //        return numbers
     }
     
+    @Suppress("SameParameterValue")
     private fun getTopPns(date: String, topCount: Int): List<Double> {
         return iRepository.getDateData()
             .filter { dd -> dd.date.before(date) }
