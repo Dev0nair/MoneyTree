@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -69,6 +70,9 @@ fun <R> Flow<R>.flowUseCase(onEach: (R) -> Unit = {}, onComplete: () -> Unit = {
             withContext(Dispatchers.Main) {
                 onComplete()
             }
+        }
+        .catch {
+            onError(it)
         }
         .launchIn(coroutineScope)
 }

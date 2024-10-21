@@ -11,9 +11,14 @@ import javax.inject.Inject
 
 class PunctuationManager @Inject constructor(private val iRepository: IRepository) {
     
+    // Refactor: useSaved is useless. Should take it out on a new function to recover the current saved DateData of Date
+    // Should return a list of 49 items
     fun generatePnOfDate(date: String, useSaved: Boolean): List<DateData> {
-        val currentDateData: List<DateData> = iRepository.getDateData(date)
-        if (useSaved && currentDateData.isNotEmpty()) return currentDateData
+        if (useSaved) {
+            val currentDateData: List<DateData> = iRepository.getDateData(date)
+            if (currentDateData.isNotEmpty()) return currentDateData
+        }
+        
         val dateDataList: MutableList<DateData> = mutableListOf()
         val resultList = iRepository.getResults()
             .filter { result -> result.date.before(date) }
@@ -33,19 +38,21 @@ class PunctuationManager @Inject constructor(private val iRepository: IRepositor
                 }
             }
             val pn = median(appearances) - counter
-            dateDataList.add(DateData(date = date, numberData = NumberData(number, pn.roundTo())))
+            dateDataList.add(DateData(date = date, numberData = NumberData(number = number, punctuation = pn.roundTo())))
         }
         
         return dateDataList
     }
     
     fun generatePdOfDate(date: String, useSaved: Boolean): List<PDResult> {
-        val currentPDResult: List<PDResult> = iRepository.getPDResult(date)
-        if (useSaved && currentPDResult.isNotEmpty()) return currentPDResult
+        if (useSaved) {
+            val currentPDResult: List<PDResult> = iRepository.getPDResult(date)
+            if (currentPDResult.isNotEmpty()) return currentPDResult
+        }
+        // List of winner punctuations. Will only get 6 PNs per day.
         val dateDataList: List<DateData> = iRepository.getDateData()
             .filter { dateData -> dateData.date.before(date) }
             .sortedBy { it.date }
-        //.takeLast(6 * 31 * 12)
         val totalPns: List<Double> = dateDataList.map { dd -> dd.numberData.punctuation }.distinct()
         val pdList: MutableList<PDResult> = mutableListOf()
         
@@ -54,7 +61,7 @@ class PunctuationManager @Inject constructor(private val iRepository: IRepositor
             var counter: Int = 0
             
             dateDataList.forEach { dd ->
-                if (dd.numberData.punctuation == pn) {
+                if (dd.numberData.punctuation.toInt() == pn.toInt()) {
                     appearances.add(counter)
                     counter = 0
                 } else {

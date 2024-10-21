@@ -75,14 +75,6 @@ suspend fun String.iterateFromDay(from: String, untilExtra: Int = 1, action: sus
 }
 
 fun median(numbers: List<Int>): Double {
-    //    val sortedNumbers = numbers.sorted()
-    //    val middle = sortedNumbers.size / 2
-    //
-    //    return if (sortedNumbers.size % 2 == 1) {
-    //        sortedNumbers[middle].toDouble()
-    //    } else {
-    //        (sortedNumbers[middle - 1] + sortedNumbers[middle]) / 2.0
-    //    }
     val sorted = numbers.sorted()
     val result = if (sorted.size > 2) {
         sorted.slice(1..<sorted.size).average()
@@ -98,5 +90,13 @@ fun median(numbers: List<Int>): Double {
 }
 
 fun Double.roundTo(decimals: Int = 2): Double {
-    return BigDecimal(this).setScale(2, RoundingMode.DOWN).toDouble()
+    return BigDecimal(this).setScale(decimals, RoundingMode.DOWN).toDouble()
+}
+
+fun Int.toPrize(): Int = when (this) {
+    3 -> 4
+    4 -> 24
+    5 -> 1000
+    6 -> 100000
+    else -> 0
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,20 +19,15 @@ import com.ismaelgr.presentation.toUIDate
 
 @Composable
 fun DateDetailsScreen(
-    date: String,
     goBack: () -> Unit
 ) {
     val viewModel: DateDetailsViewModel = hiltViewModel()
-    val state: DateDetailsViewModel.State by viewModel.state.collectAsState()
+    val state: DateDetailsState by viewModel.state.collectAsState()
     
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadData(date)
-    }
-    
-    if (state is DateDetailsViewModel.State.Empty) {
-        LoadingScreen(loadingMsg = (state as DateDetailsViewModel.State.Empty).loadingMsg)
+    if (state is DateDetailsState.Empty) {
+        LoadingScreen(loadingMsg = (state as DateDetailsState.Empty).loadingMsg)
     } else {
-        View(goBack = goBack, estimationResult = (state as DateDetailsViewModel.State.Data).estimatedResult)
+        View(goBack = goBack, estimationResult = (state as DateDetailsState.Data).estimatedResult)
     }
 }
 

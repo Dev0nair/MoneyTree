@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ismaelgr.domain.model.EstimatedResult
+import com.ismaelgr.domain.toPrize
 
 @Composable
 fun DateStatistics(estimatedResult: EstimatedResult) {
@@ -34,14 +35,8 @@ private fun Summary(estimatedResult: EstimatedResult) {
     val estimationsWithRewards = estimatedResult.estimations
         .map { es -> es.count { nd -> nd.number in estimatedResult.winnerList } }
         .filter { count -> count > 2 }
-    val prices: Map<Int, Int> = mapOf(
-        3 to 4,
-        4 to 25,
-        5 to 1000,
-        6 to 100000
-    )
     val estimatedReward = estimationsWithRewards
-        .mapNotNull { count -> prices[count] }
+        .map { count -> count.toPrize() }
         .reduceOrNull { price, count -> price + count }
         ?: 0
     

@@ -3,12 +3,12 @@ package com.ismaelgr.domain.di
 import com.ismaelgr.domain.IRepository
 import com.ismaelgr.domain.manager.PunctuationManager
 import com.ismaelgr.domain.manager.StatisticManager
+import com.ismaelgr.domain.usecase.CalculateSetsToWinUseCase
 import com.ismaelgr.domain.usecase.CleanEstimationsUseCase
 import com.ismaelgr.domain.usecase.DownloadDataUseCase
 import com.ismaelgr.domain.usecase.GenerateEstimationOfDateUseCase
 import com.ismaelgr.domain.usecase.GenerateStatisticOfDateUseCase
 import com.ismaelgr.domain.usecase.GetNextResultDateUseCase
-import com.ismaelgr.domain.usecase.GetResultStatisticUseCase
 import com.ismaelgr.domain.usecase.GetResultsUseCase
 import dagger.Module
 import dagger.Provides
@@ -37,9 +37,6 @@ object DomainModule {
     fun getGenerateStatisticOfDateUseCase(iRepository: IRepository, punctuationManager: PunctuationManager): GenerateStatisticOfDateUseCase = GenerateStatisticOfDateUseCase(iRepository, punctuationManager)
     
     @Provides
-    fun getResultStatisticUseCase(iRepository: IRepository): GetResultStatisticUseCase = GetResultStatisticUseCase(iRepository)
-    
-    @Provides
     fun getNextResultDateUseCase(iRepository: IRepository): GetNextResultDateUseCase = GetNextResultDateUseCase(iRepository)
     
     @Provides
@@ -47,5 +44,8 @@ object DomainModule {
     
     @Provides
     fun getCleanEstimationsUseCase(iRepository: IRepository): CleanEstimationsUseCase = CleanEstimationsUseCase(iRepository)
+    
+    @Provides
+    fun getCalculateSetsToWinUseCase(iRepository: IRepository, punctuationManager: PunctuationManager, statisticManager: StatisticManager): CalculateSetsToWinUseCase = CalculateSetsToWinUseCase(iRepository, punctuationManager, statisticManager)
     // end Section
 }

@@ -1,5 +1,6 @@
 package com.ismaelgr.domain.manager
 
+import android.util.Log
 import com.ismaelgr.domain.IRepository
 import com.ismaelgr.domain.before
 import com.ismaelgr.domain.model.NumberData
@@ -11,40 +12,64 @@ import kotlin.math.absoluteValue
 class StatisticManager @Inject constructor(private val iRepository: IRepository) {
     
     fun generateStatistics(date: String, pns: List<NumberData>, pds: List<PDResult>): List<Statistic> {
-        val usualPNs = getTopPns(date, 6) // con 6 va bien
-        val importantList = pns
-            .sortedByDescending { nd ->
-                nd.punctuation.toInt() in usualPNs.map { it.toInt() }
-                //nd.punctuation >= -3 && nd.punctuation <= 7.5
-            }
+        val usualPNs: List<Double> = getTopPns(date, 6) // con 6 va bien
+        val sortedPnList: List<NumberData> = pns
+            .sortedWith(
+                compareBy(
+                    { nd -> nd.punctuation.toInt() !in usualPNs.map { it.toInt() } }, // Con el !in, los que aparezcan serán false e irán al principio
+                    { it.punctuation }) // Además, serán ordenados por puntuación de menos a mayor
+            )
+        val numStatisticsToGenerate = 15 * 6 // NUmber of sets * numbers per set
         
         return pds.flatMap { res ->
-            val numbers = chooseNearestNumber(listPNs = importantList, pn = res.pn, (90 / pds.size + 1))
+            // this calc takes the correct ammount to get all the numbers needed for the sets -> numStatisticsToGenerate / pds.size + 1. Per PD, we get the nearest x pns with the nearest number associated
+            val numbers = chooseNearestNumber(listPNs = sortedPnList, pn = res.pn, (numStatisticsToGenerate / pds.size + 1))
             numbers.map { num ->
                 Statistic(pd = res.pd, pn = res.pn, number = num)
             }
         }
-        
     }
     
-    fun generateEstimations(statistic: List<Statistic>): List<List<NumberData>> {
+    fun generateEstimations(statistic: List<Statistic>, quantity: Int = 15): List<List<NumberData>> {
         val result = mutableListOf<List<Statistic>>()
         
-        (1..15).forEach { sequence ->
-            val numbers = mutableListOf<Statistic>()
-            val sortedStatistics = statistic.filter { it !in result.flatten() }.sortedBy { (it.pd - it.pn).absoluteValue }
-            
-            (1..6).forEach { _ ->
-                try {
-                    val newNumber = sortedStatistics.first { n -> n.number !in numbers.map { it.number } }
-                    numbers.add(newNumber)
-                } catch (e: Exception) {
-                }
+        fun isSetEmpty(set: List<Statistic>): Boolean {
+            return set.none { it.number > 0 }
+        }
+        
+        while (result.size < quantity) {
+            val newResult = newGenerateSet(statistic.filter { st -> st !in result.flatten() })
+            if (newResult !in result && !isSetEmpty(newResult)) {
+                result.add(newResult)
             }
-            result.add(numbers)
+            
+            if (isSetEmpty(newResult)) {
+                break
+            }
         }
         
         return result.map { res -> res.map { NumberData(it.number, it.pn) } }
+    }
+    
+    fun newGenerateSet(
+        statistic: List<Statistic>,
+    ): List<Statistic> {
+        if (statistic.isEmpty()) {
+            Log.i(this@StatisticManager.javaClass.simpleName, "Empty statistics!")
+            return emptyList()
+        }
+        //val numbers = mutableListOf<Statistic>()
+        return statistic
+            //.sortedBy { it.pd }
+            .distinctBy { it.number }
+            .take(6)
+        //        (1..6).forEach { number ->
+        //            val filteredList: List<Statistic> = statistic.filter { n -> n.number !in numbers.map { it.number } }
+        //            val newNumber = filteredList.getOrElse(number) { Statistic(-1.0, -1.0, 0) }
+        //            numbers.add(newNumber)
+        //        }
+        //
+        //        return numbers
     }
     
     private fun getTopPns(date: String, topCount: Int): List<Double> {
