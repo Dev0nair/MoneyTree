@@ -2,7 +2,6 @@ package com.ismaelgr.presentation.screen.controlpanel
 
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.getTodayString
-import com.ismaelgr.domain.model.EstimatedResult
 import com.ismaelgr.domain.usecase.CleanEstimationsUseCase
 import com.ismaelgr.domain.usecase.GenerateEstimationOfDateUseCase
 import com.ismaelgr.domain.usecase.GenerateStatisticOfDateUseCase
@@ -23,19 +22,10 @@ class ControlPanelViewModel @Inject constructor(
     private val generateStatisticOfDateUseCase: GenerateStatisticOfDateUseCase,
     navigator: Navigator
 ) : NavigationViewModel(navigator) {
-    
-    sealed class State {
-        data class Empty(val msg: String = "") : State()
-        data class Data(val data: List<EstimatedResult>) : State()
-    }
-    
-    sealed class RestimationState {
-        data object Empty : RestimationState()
-        data object Done : RestimationState()
-    }
-    
-    private val _state: MutableStateFlow<State> = MutableStateFlow(State.Empty())
-    val state: StateFlow<State> = _state
+
+    private val _state: MutableStateFlow<ControlPanelState> =
+        MutableStateFlow(ControlPanelState.Empty())
+    val state: StateFlow<ControlPanelState> = _state
     private val _restimationState: MutableStateFlow<RestimationState> = MutableStateFlow(RestimationState.Empty)
     val restimationState: StateFlow<RestimationState> = _restimationState
     
@@ -50,7 +40,7 @@ class ControlPanelViewModel @Inject constructor(
         runUseCase(
             flow = combine(flows) { it },
             onEach = { results ->
-                _state.update { State.Data(results.toList()) }
+                _state.update { ControlPanelState.Data(results.toList()) }
             }
         )
     }
@@ -71,6 +61,6 @@ class ControlPanelViewModel @Inject constructor(
     }
     
     private fun setLoadingState(msg: String) {
-        _state.update { State.Empty(msg) }
+        _state.update { ControlPanelState.Empty(msg) }
     }
 }

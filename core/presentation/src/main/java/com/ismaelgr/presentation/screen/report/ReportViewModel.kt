@@ -20,14 +20,9 @@ class ReportViewModel @Inject constructor(
     private val generateEstimationOfDateUseCase: GenerateEstimationOfDateUseCase,
     navigator: Navigator
 ) : NavigationViewModel(navigator) {
-    
-    sealed class State {
-        data class Empty(val msg: String = "") : State()
-        data class Data(val data: List<ReportData>) : State()
-    }
-    
-    private val _state: MutableStateFlow<State> = MutableStateFlow(State.Empty())
-    val state: StateFlow<State> = _state
+
+    private val _state: MutableStateFlow<ReportState> = MutableStateFlow(ReportState.Empty())
+    val state: StateFlow<ReportState> = _state
     
     fun loadData() {
         val daysToCheck = 30
@@ -41,7 +36,7 @@ class ReportViewModel @Inject constructor(
         runUseCase(
             flow = combine(flows) { resultList -> resultList.map(::mapToReportData) },
             onEach = { results ->
-                _state.update { State.Data(results) }
+                _state.update { ReportState.Data(results) }
             }
         )
     }
@@ -72,7 +67,7 @@ class ReportViewModel @Inject constructor(
     }
     
     private fun setLoadingState(msg: String) {
-        _state.update { State.Empty(msg) }
+        _state.update { ReportState.Empty(msg) }
     }
     
 }
