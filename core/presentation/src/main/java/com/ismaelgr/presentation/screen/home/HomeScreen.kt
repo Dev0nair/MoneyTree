@@ -26,25 +26,13 @@ import com.ismaelgr.presentation.model.HomeOption
 import com.ismaelgr.presentation.screen.loading.LoadingScreen
 
 @Composable
-fun HomeScreen(
-    navigateTo: (String) -> Unit
-) {
+fun HomeScreen() {
     val viewModel: HomeViewModel = hiltViewModel()
-    val loading by viewModel.loading.collectAsState()
-    
-    if (loading) {
-        LoadingScreen(loadingMsg = "Descargando datos")
-    } else {
-        val options = listOf(
-            HomeOption("Lista de días") { navigateTo("daylist") },
-            HomeOption("Estudio resultados") { navigateTo("daylist") },
-            HomeOption("Estudio ganancias") { navigateTo("profitstudio") },
-            HomeOption("Resultados") { navigateTo("daylist") },
-            HomeOption("Panel de control") { navigateTo("controlpanel") },
-            HomeOption("Report") { navigateTo("report") },
-        )
-        
-        View(options)
+    val state by viewModel.state.collectAsState()
+
+    when (state) {
+        is HomeState.Loading -> LoadingScreen(loadingMsg = "Descargando datos")
+        is HomeState.Data -> View((state as HomeState.Data).options)
     }
 }
 
@@ -75,7 +63,10 @@ private fun OptionView(option: HomeOption) {
     Box(modifier = Modifier
         .fillMaxSize()
         .aspectRatio(2 / 1f)
-        .background(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(24.dp))
+        .background(
+            color = MaterialTheme.colorScheme.primaryContainer,
+            shape = RoundedCornerShape(24.dp)
+        )
         .clickable { option.onClick() }) {
         Text(modifier = Modifier.align(Alignment.Center), text = option.name)
     }

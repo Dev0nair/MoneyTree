@@ -1,12 +1,13 @@
 package com.ismaelgr.presentation.screen.profitstudy
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ismaelgr.domain.getFormatedToDate
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.getTodayString
 import com.ismaelgr.domain.usecase.CalculateSetsToWinUseCase
+import com.ismaelgr.presentation.navigation.Navigator
 import com.ismaelgr.presentation.runUseCase
+import com.ismaelgr.presentation.screen.NavigationViewModel
 import com.ismaelgr.presentation.screen.profitstudy.ProfitStudioConfig.MaxTriesPerDay
 import com.ismaelgr.presentation.screen.profitstudy.ProfitStudioConfig.MinProfitPerCalc
 import com.ismaelgr.presentation.screen.profitstudy.ProfitStudioConfig.NumDaysToCalc
@@ -22,8 +23,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfitStudioViewModel @Inject constructor(
-    private val calculateSetsToWinUseCase: CalculateSetsToWinUseCase
-) : ViewModel() {
+    private val calculateSetsToWinUseCase: CalculateSetsToWinUseCase,
+    navigator: Navigator
+) : NavigationViewModel(navigator) {
     
     private val _state: MutableStateFlow<ProfitStudioState> = MutableStateFlow(ProfitStudioState.Loading("Iniciando"))
     val state: StateFlow<ProfitStudioState> = _state

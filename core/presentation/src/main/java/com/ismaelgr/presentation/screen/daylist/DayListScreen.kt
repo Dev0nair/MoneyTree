@@ -17,20 +17,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ismaelgr.domain.model.Result
 import com.ismaelgr.presentation.component.ResultNumbersComponent
 import com.ismaelgr.presentation.component.ToolbarComponent
+import com.ismaelgr.presentation.screen.datedetails.getDateDetailsRoute
 import com.ismaelgr.presentation.screen.loading.LoadingScreen
 
 @Composable
-fun DayListScreen(
-    goBack: () -> Unit,
-    goToDateDetails: (String) -> Unit,
-) {
+fun DayListScreen() {
     val viewModel: DayListViewModel = hiltViewModel()
     val state by viewModel.resultListState.collectAsState()
     
     if (state is DayListState.Empty) {
         LoadingScreen((state as DayListState.Empty).loadingState)
     } else if (state is DayListState.Data) {
-        View(goBack = goBack, goToDateDetails = goToDateDetails, results = (state as DayListState.Data).data)
+        View(
+            goBack = viewModel::navigateUp,
+            goToDateDetails = { date -> viewModel.navigate(getDateDetailsRoute(date)) },
+            results = (state as DayListState.Data).data
+        )
     }
 }
 

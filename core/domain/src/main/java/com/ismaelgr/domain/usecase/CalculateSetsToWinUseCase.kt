@@ -2,6 +2,7 @@ package com.ismaelgr.domain.usecase
 
 import com.ismaelgr.domain.IRepository
 import com.ismaelgr.domain.manager.PunctuationManager
+import com.ismaelgr.domain.manager.SortedByPunctuation
 import com.ismaelgr.domain.manager.StatisticManager
 import com.ismaelgr.domain.model.NumberData
 import com.ismaelgr.domain.model.PDResult
@@ -26,7 +27,11 @@ class CalculateSetsToWinUseCase @Inject constructor(
         if (!dateResults?.numberList.isNullOrEmpty()) {
             val pnUntilDate: List<NumberData> = punctuationManager.generatePnOfDate(input.date, false).map { dd -> dd.numberData }
             val pdUntilDate: List<PDResult> = punctuationManager.generatePdOfDate(input.date, true)
-            val statistics = statisticManager.generateStatistics(date = input.date, pds = pdUntilDate, pns = pnUntilDate).toSet().toList()
+            val statistics = statisticManager
+                .generateStatistics(date = input.date, pds = pdUntilDate, pns = pnUntilDate)
+                .toSet()
+                .toList()
+                .SortedByPunctuation()
             val setsGenerated = mutableListOf<List<Statistic>>()
             
             fun checkPrize(): Int {

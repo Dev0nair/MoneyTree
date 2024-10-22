@@ -11,19 +11,23 @@ import kotlin.math.absoluteValue
 class StatisticManager @Inject constructor(private val iRepository: IRepository) {
     
     fun generateStatistics(date: String, pns: List<NumberData>, pds: List<PDResult>): List<Statistic> {
-        val usualPNs: List<Double> = getTopPns(date, 6) // con 6 va bien
-        val sortedPnList: List<NumberData> = pns
-            .sortedWith(
-                compareBy(
-                    { nd -> nd.punctuation.toInt() !in usualPNs.map { it.toInt() } }, // Con el !in, los que aparezcan serán false e irán al principio
-                    { it.punctuation }, // Además, serán ordenados por puntuación de menos a mayor
-                )
-            )
+        //        val usualPNs: List<Double> = getTopPns(date, 6) // con 6 va bien
+        //        val sortedPnList: List<NumberData> = pns
+        //            .sortedWith(
+        //                compareBy(
+        //                    { nd -> nd.punctuation.toInt() !in usualPNs.map { it.toInt() } }, // Con el !in, los que aparezcan serán false e irán al principio
+        //                    { it.punctuation }, // Además, serán ordenados por puntuación de menos a mayor
+        //                )
+        //            )
         val numStatisticsToGenerate = 15 * 6 // Number of sets * numbers per set
         
         return pds.flatMap { res ->
             // this calc takes the correct amount to get all the numbers needed for the sets -> numStatisticsToGenerate / pds.size + 1. Per PD, we get the nearest x pns with the nearest number associated
-            val numbers = chooseNearestNumber(listPNs = sortedPnList, pn = res.pn, (numStatisticsToGenerate / pds.size + 1))
+            val numbers = chooseNearestNumber(
+                listPNs = pns,
+                pn = res.pn,
+                (numStatisticsToGenerate / pds.size + 1)
+            )
             numbers.map { num ->
                 Statistic(pd = res.pd, pn = res.pn, number = num)
             }
@@ -36,9 +40,11 @@ class StatisticManager @Inject constructor(private val iRepository: IRepository)
         fun isSetEmpty(set: List<Statistic>): Boolean {
             return set.none { it.number > 0 }
         }
+
+        val sortedStatistic = statistic.SortedByPunctuation()
         
         while (result.size < quantity) {
-            val newResult = newGenerateSet(statistic.filter { st -> st !in result.flatten() })
+            val newResult = newGenerateSet(sortedStatistic.filter { st -> st !in result.flatten() })
             if (newResult !in result && !isSetEmpty(newResult)) {
                 result.add(newResult)
             }
@@ -55,14 +61,9 @@ class StatisticManager @Inject constructor(private val iRepository: IRepository)
     
     fun newGenerateSet(
         statistic: List<Statistic>,
-    ): List<Statistic> {
-        if (statistic.isEmpty()) {
-            return emptyList()
-        }
-        return statistic
-            .distinctBy { it.number }
-            .take(6)
-    }
+    ): List<Statistic> = statistic
+        .distinctBy { it.number }
+        .take(6)
     
     @Suppress("SameParameterValue")
     private fun getTopPns(date: String, topCount: Int): List<Double> {

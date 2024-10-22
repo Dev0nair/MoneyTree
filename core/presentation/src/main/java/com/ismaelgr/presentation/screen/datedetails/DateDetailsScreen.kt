@@ -18,16 +18,17 @@ import com.ismaelgr.presentation.screen.loading.LoadingScreen
 import com.ismaelgr.presentation.toUIDate
 
 @Composable
-fun DateDetailsScreen(
-    goBack: () -> Unit
-) {
+fun DateDetailsScreen() {
     val viewModel: DateDetailsViewModel = hiltViewModel()
     val state: DateDetailsState by viewModel.state.collectAsState()
     
     if (state is DateDetailsState.Empty) {
         LoadingScreen(loadingMsg = (state as DateDetailsState.Empty).loadingMsg)
     } else {
-        View(goBack = goBack, estimationResult = (state as DateDetailsState.Data).estimatedResult)
+        View(
+            goBack = viewModel::navigateUp,
+            estimationResult = (state as DateDetailsState.Data).estimatedResult
+        )
     }
 }
 

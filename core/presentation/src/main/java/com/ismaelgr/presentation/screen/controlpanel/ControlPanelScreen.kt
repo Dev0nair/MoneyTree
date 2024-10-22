@@ -24,9 +24,7 @@ import com.ismaelgr.presentation.component.ToolbarComponent
 import com.ismaelgr.presentation.screen.loading.LoadingScreen
 
 @Composable
-fun ControlPanelScreen(
-    goBack: () -> Unit
-) {
+fun ControlPanelScreen() {
     val viewModel: ControlPanelViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     val restimationState by viewModel.restimationState.collectAsState()
@@ -38,7 +36,11 @@ fun ControlPanelScreen(
     if (state is ControlPanelViewModel.State.Empty || restimationState is ControlPanelViewModel.RestimationState.Empty) {
         LoadingScreen(loadingMsg = "Cargando datos")
     } else {
-        View((state as ControlPanelViewModel.State.Data).data, goBack, viewModel::restartEstimations)
+        View(
+            (state as ControlPanelViewModel.State.Data).data,
+            viewModel::navigateUp,
+            viewModel::restartEstimations
+        )
     }
 }
 

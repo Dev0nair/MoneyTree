@@ -1,4 +1,4 @@
-package com.ismaelgr.presentation
+package com.ismaelgr.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf

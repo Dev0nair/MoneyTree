@@ -24,9 +24,7 @@ import com.ismaelgr.presentation.screen.loading.LoadingScreen
 import com.ismaelgr.presentation.toUIDate
 
 @Composable
-fun ReportScreen(
-    goBack: () -> Unit
-) {
+fun ReportScreen() {
     val viewModel: ReportViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     
@@ -37,7 +35,7 @@ fun ReportScreen(
     if (state is ReportViewModel.State.Empty) {
         LoadingScreen(loadingMsg = (state as ReportViewModel.State.Empty).msg)
     } else {
-        View(goBack, (state as ReportViewModel.State.Data).data)
+        View(viewModel::navigateUp, (state as ReportViewModel.State.Data).data)
     }
     
 }

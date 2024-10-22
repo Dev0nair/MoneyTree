@@ -1,13 +1,14 @@
 package com.ismaelgr.presentation.screen.daylist
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.model.Result
 import com.ismaelgr.domain.usecase.GenerateStatisticOfDateUseCase
 import com.ismaelgr.domain.usecase.GetResultsUseCase
+import com.ismaelgr.presentation.navigation.Navigator
 import com.ismaelgr.presentation.runUseCase
+import com.ismaelgr.presentation.screen.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,8 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DayListViewModel @Inject constructor(
     private val generateStatisticOfDateUseCase: GenerateStatisticOfDateUseCase,
-    private val getResultsUseCase: GetResultsUseCase
-) : ViewModel() {
+    private val getResultsUseCase: GetResultsUseCase,
+    navigator: Navigator
+) : NavigationViewModel(navigator) {
     
     private val numDays: Int = 10
     private val _resultListState: MutableStateFlow<DayListState> = MutableStateFlow(DayListState.Empty())

@@ -21,7 +21,8 @@ object DomainModule {
     
     // section Manager
     @Provides
-    fun getPunctiationsManager(iRepository: IRepository): PunctuationManager = PunctuationManager(iRepository)
+    fun getPunctuationsManager(iRepository: IRepository): PunctuationManager =
+        PunctuationManager(iRepository)
     
     @Provides
     fun getStatisticsManager(iRepository: IRepository): StatisticManager = StatisticManager(iRepository)

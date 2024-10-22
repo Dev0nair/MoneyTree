@@ -89,8 +89,8 @@ fun median(numbers: List<Int>): Double {
     }
 }
 
-fun Double.roundTo(decimals: Int = 2): Double {
-    return BigDecimal(this).setScale(decimals, RoundingMode.DOWN).toDouble()
+fun Double.roundTo(decimals: Int = 2, roundingMode: RoundingMode = RoundingMode.DOWN): Double {
+    return BigDecimal(this).setScale(decimals, roundingMode).toDouble()
 }
 
 fun Int.toPrize(): Int = when (this) {

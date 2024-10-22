@@ -1,13 +1,14 @@
 package com.ismaelgr.presentation.screen.controlpanel
 
-import androidx.lifecycle.ViewModel
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.getTodayString
 import com.ismaelgr.domain.model.EstimatedResult
 import com.ismaelgr.domain.usecase.CleanEstimationsUseCase
 import com.ismaelgr.domain.usecase.GenerateEstimationOfDateUseCase
 import com.ismaelgr.domain.usecase.GenerateStatisticOfDateUseCase
+import com.ismaelgr.presentation.navigation.Navigator
 import com.ismaelgr.presentation.runUseCase
+import com.ismaelgr.presentation.screen.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,8 +20,9 @@ import javax.inject.Inject
 class ControlPanelViewModel @Inject constructor(
     private val generateEstimationOfDateUseCase: GenerateEstimationOfDateUseCase,
     private val cleanEstimationsUseCase: CleanEstimationsUseCase,
-    private val generateStatisticOfDateUseCase: GenerateStatisticOfDateUseCase
-) : ViewModel() {
+    private val generateStatisticOfDateUseCase: GenerateStatisticOfDateUseCase,
+    navigator: Navigator
+) : NavigationViewModel(navigator) {
     
     sealed class State {
         data class Empty(val msg: String = "") : State()

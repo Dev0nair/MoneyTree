@@ -26,16 +26,14 @@ import com.ismaelgr.presentation.screen.profitstudy.ProfitStudioConfig.MinProfit
 import com.ismaelgr.presentation.toUIDate
 
 @Composable
-fun ProfitStudyScreen(
-    goBack: () -> Unit
-) {
+fun ProfitStudyScreen() {
     val viewModel: ProfitStudioViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     
     if (state is ProfitStudioState.Loading) {
         LoadingScreen(loadingMsg = (state as ProfitStudioState.Loading).msg)
     } else {
-        View(goBack, (state as ProfitStudioState.Data).data, MinProfitPerCalc)
+        View(viewModel::navigateUp, (state as ProfitStudioState.Data).data, MinProfitPerCalc)
     }
     
 }

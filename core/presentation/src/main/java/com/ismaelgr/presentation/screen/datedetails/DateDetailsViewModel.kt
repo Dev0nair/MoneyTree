@@ -1,10 +1,11 @@
 package com.ismaelgr.presentation.screen.datedetails
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ismaelgr.domain.usecase.GenerateEstimationOfDateUseCase
+import com.ismaelgr.presentation.navigation.Navigator
 import com.ismaelgr.presentation.runUseCase
+import com.ismaelgr.presentation.screen.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,8 +18,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DateDetailsViewModel @Inject constructor(
     private val generateEstimationOfDateUseCase: GenerateEstimationOfDateUseCase,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+    navigator: Navigator
+) : NavigationViewModel(navigator) {
     
     private val _state: MutableStateFlow<DateDetailsState> = MutableStateFlow(DateDetailsState.Empty())
     val state: StateFlow<DateDetailsState> = _state

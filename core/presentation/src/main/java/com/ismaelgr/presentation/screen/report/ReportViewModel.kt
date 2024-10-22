@@ -1,12 +1,13 @@
 package com.ismaelgr.presentation.screen.report
 
-import androidx.lifecycle.ViewModel
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.getTodayString
 import com.ismaelgr.domain.model.EstimatedResult
 import com.ismaelgr.domain.usecase.GenerateEstimationOfDateUseCase
 import com.ismaelgr.presentation.model.ReportData
+import com.ismaelgr.presentation.navigation.Navigator
 import com.ismaelgr.presentation.runUseCase
+import com.ismaelgr.presentation.screen.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ReportViewModel @Inject constructor(
     private val generateEstimationOfDateUseCase: GenerateEstimationOfDateUseCase,
-) : ViewModel() {
+    navigator: Navigator
+) : NavigationViewModel(navigator) {
     
     sealed class State {
         data class Empty(val msg: String = "") : State()
