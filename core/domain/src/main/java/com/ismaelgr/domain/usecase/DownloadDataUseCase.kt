@@ -1,5 +1,6 @@
 package com.ismaelgr.domain.usecase
 
+import android.util.Log
 import com.ismaelgr.domain.IRepository
 import com.ismaelgr.domain.addDays
 import com.ismaelgr.domain.getDateFormated
@@ -76,6 +77,7 @@ class DownloadDataUseCase @Inject constructor(
                 iRepository.addResult(result)
             }
         } catch (e: Exception) {
+            Log.e(this.javaClass.simpleName, e.message.orEmpty())
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.ismaelgr.presentation.screen.controlpanel
 
+import androidx.lifecycle.viewModelScope
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.getTodayString
 import com.ismaelgr.domain.usecase.CleanEstimationsUseCase
@@ -10,8 +11,11 @@ import com.ismaelgr.presentation.runUseCase
 import com.ismaelgr.presentation.screen.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -26,10 +30,14 @@ class ControlPanelViewModel @Inject constructor(
     private val _state: MutableStateFlow<ControlPanelState> =
         MutableStateFlow(ControlPanelState.Empty())
     val state: StateFlow<ControlPanelState> = _state
+        .onStart { loadData() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, ControlPanelState.Empty())
+
+
     private val _restimationState: MutableStateFlow<RestimationState> = MutableStateFlow(RestimationState.Empty)
     val restimationState: StateFlow<RestimationState> = _restimationState
-    
-    fun loadData() {
+
+    private fun loadData() {
         val daysToCheck = 10
         val daysList: List<String> = ((-1 * daysToCheck)..-1).map { i ->
             getTodayString().getNextDay(i)
@@ -46,7 +54,7 @@ class ControlPanelViewModel @Inject constructor(
     }
     
     fun restartEstimations() {
-        _restimationState.update { RestimationState.Empty }
+        _restimationState.update { RestimationState.Loading }
         runUseCase(
             flow = cleanEstimationsUseCase(),
             onComplete = {

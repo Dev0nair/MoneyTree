@@ -72,4 +72,7 @@ dependencies {
     // Screens
     implementation(project(":core:data"))
     implementation(project(":core:presentation"))
+
+    // Security
+    implementation(libs.androidx.security.crypto) // O la versión más reciente
 }

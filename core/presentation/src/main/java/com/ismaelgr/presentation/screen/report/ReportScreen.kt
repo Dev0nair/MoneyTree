@@ -17,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ismaelgr.domain.getFormatedToDate
 import com.ismaelgr.domain.getNextDay
 import com.ismaelgr.domain.getTodayString
-import com.ismaelgr.presentation.LaunchOnCreate
 import com.ismaelgr.presentation.component.ToolbarComponent
 import com.ismaelgr.presentation.model.ReportData
 import com.ismaelgr.presentation.screen.loading.LoadingScreen
@@ -27,17 +26,12 @@ import com.ismaelgr.presentation.toUIDate
 fun ReportScreen() {
     val viewModel: ReportViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
-    
-    LaunchOnCreate {
-        viewModel.loadData()
-    }
-    
-    if (state is ReportViewModel.State.Empty) {
-        LoadingScreen(loadingMsg = (state as ReportViewModel.State.Empty).msg)
+
+    if (state is ReportState.Empty) {
+        LoadingScreen(loadingMsg = (state as ReportState.Empty).msg)
     } else {
-        View(viewModel::navigateUp, (state as ReportViewModel.State.Data).data)
+        View(viewModel::navigateUp, (state as ReportState.Data).data)
     }
-    
 }
 
 @OptIn(ExperimentalFoundationApi::class)

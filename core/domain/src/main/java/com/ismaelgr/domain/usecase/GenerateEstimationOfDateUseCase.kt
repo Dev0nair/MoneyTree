@@ -24,7 +24,8 @@ class GenerateEstimationOfDateUseCase @Inject constructor(
         val pnUntilDate: List<NumberData> = punctuationManager.generatePnOfDate(date, false).map { dd -> dd.numberData }
         val pdUntilDate: List<PDResult> = punctuationManager.generatePdOfDate(date, false)
         val statistics = statisticManager.generateStatistics(date = date, pds = pdUntilDate, pns = pnUntilDate).toSet().toList()
-        val estimation: List<List<NumberData>> = statisticManager.generateEstimations(statistics)
+        val estimation: List<List<NumberData>> =
+            statisticManager.generateEstimations(statistics, date = date)
         val winnerAnalysis: List<Summary> = dateResults?.numberList?.mapNotNull { winner ->
             pnUntilDate.firstOrNull { s -> s.number == winner }
         }?.map { d ->

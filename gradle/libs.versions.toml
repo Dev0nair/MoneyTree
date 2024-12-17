@@ -18,6 +18,7 @@ google-font-version = "1.6.8"
 coil = "2.6.0"
 room_version = "2.6.1"
 constraint-layout = "1.0.1"
+securityCrypto = "1.1.0-alpha06"
 turbine_version = "1.1.0"
 mockito_framework = "5.7.0"
 mockito_kotlin = "5.3.1"
@@ -27,9 +28,11 @@ lifecycleRuntimeComposeAndroid = "2.8.4"
 retrofit = "2.8.1"
 okhttp = "4.12.0"
 okhttpInterceptor = "4.7.2"
+securityCryptoKtx = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -71,6 +74,7 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofitGSON = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttpLogginInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
